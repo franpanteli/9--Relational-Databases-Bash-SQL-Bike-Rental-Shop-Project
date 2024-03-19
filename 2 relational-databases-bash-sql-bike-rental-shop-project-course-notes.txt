@@ -4,10 +4,10 @@ MAKING THE PROJECT DATABASE:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 -> echo hello terminal <- To print "hello terminal" in the terminal 
--> psql --username=freecodecamp --dbname=postgres
+-> psql --username=freecodecamp --dbname=postgres 
 -> \l 
 -> CREATE DATABASE bikes;
--> \c bikes
+-> \c bikes <- Connect to the database 
 -> CREATE TABLE bikes();
 -> \d
 -> ALTER TABLE bikes ADD COLUMN bike_id SERIAL PRIMARY KEY;
@@ -18,16 +18,18 @@ MAKING THE PROJECT DATABASE:
 -> ALTER TABLE bikes ADD COLUMN available BOOLEAN NOT NULL DEFAULT TRUE;
 -> \d bikes
 -> CREATE TABLE customers();
--> ALTER TABLE customers ADD COLUMN customer_id SERIAL PRIMARY KEY;
+-> ALTER TABLE customers ADD COLUMN customer_id SERIAL PRIMARY KEY; <- Add keys to the tables 
 -> \d customers
--> ALTER TABLE customers ADD COLUMN phone VARCHAR(15) NOT NULL UNIQUE;
+-> ALTER TABLE customers ADD COLUMN phone VARCHAR(15) NOT NULL UNIQUE; <- Add columns to the tables 
 -> ALTER TABLE customers ADD COLUMN name VARCHAR(40) NOT NULL;
 -> \d customers
 -> CREATE TABLE rentals(); 
 -> ALTER TABLE rentals ADD COLUMN rental_id SERIAL PRIMARY KEY;
 -> \d rentals
 -> ALTER TABLE rentals ADD COLUMN customer_id INT NOT NULL;
--> ALTER TABLE table_name ADD FOREIGN KEY(column_name) REFERENCES referenced_table(referenced_column);
+-> ALTER TABLE table_name ADD FOREIGN KEY(column_name) REFERENCES referenced_table(referenced_column); <- Adding foreign keys 
+	-> We are adding foreign keys 
+	-> We have the customers and the bikes tables
 	-> ALTER TABLE rentals ADD FOREIGN KEY(customer_id) REFERENCES customers(customer_id);
 -> \d rentals
 -> ALTER TABLE rentals ADD COLUMN bike_id INT NOT NULL;
@@ -46,6 +48,7 @@ MAKING THE PROJECT DATABASE:
 -> SELECT * from bikes;
 -> INSERT INTO bikes(type, size) VALUES('Road', 28), ('Road', 29);
 -> INSERT INTO bikes(type, size) VALUES('BMX', 19), ('BMX', 20), ('BMX', 21);
+	-> We are populating the tables with the different bikes 
 -> SELECT * from bikes;
 
 WRITING THE PROJECT .SH FILE:
@@ -54,7 +57,7 @@ WRITING THE PROJECT .SH FILE:
 
 -> \q <- To exit out of the project psql prompt and enter back into a Bash terminal 
 -> chmod +x bike-shop.sh
--> ./bike-shop.sh
+-> ./bike-shop.sh <- To run the project shell file 
 -> We are making a series of edits to the project .sh file 
 -> After completing this, it looks like this:
 
@@ -236,6 +239,8 @@ ENTERING BASH TESTS INTO THE TERMINAL:
 
         MAIN_MENU
 
+-> We are adding more information into the project .sh file 
+-> We first test the different commands in a psql prompt 
 -> [[ a =~ [0-9] ]]; echo $? <- We are then entering this into a Bash terminal to test if the statement is True or not 
 	-> The result of this is 1 (False)
 -> [[ a1 =~ [0-9] ]]; echo $? <- And this one returns True 
@@ -343,7 +348,7 @@ BACK IN THE PSQL PROMPT:
 
         MAIN_MENU
 
--> SELECT * FROM customers;
+-> SELECT * FROM customers; <- To return information in the different tables 
 -> SELECT * FROM rentals;
 -> SELECT * FROM bikes;
 -> More changes were made to the project bike-shop.sh file 
@@ -455,6 +460,8 @@ BACK IN THE PSQL PROMPT:
         MAIN_MENU
 
 -> psql --username=freecodecamp --dbname=bikes <- Back in the psql prompt 
+	-> This is similar to the previous change 
+	-> We are creating echo statements in the Bash prompt, so that we can figure out which to add to the project .sh file 
 -> SELECT * FROM rentals; 
 -> SELECT * FROM bikes ORDER BY bike_id;
 -> echo '28 | Mountain' | sed 's/ /=/g' <- Then entering this back into a Bash terminal, so that the format of the output is different when someone rents a bike 
@@ -482,7 +489,7 @@ BACK IN THE PSQL PROMPT:
 -> When one of the bikes is rented, we remove it from the remaining list of rentable options  
 -> Control c <- To exit out of the process currently being run in the terminal 
 -> psql --username=freecodecamp --dbname=bikes <- Back in the psql prompt 
--> SELECT * FROM bikes ORDER BY bike_id;
+-> SELECT * FROM bikes ORDER BY bike_id; <- Returning values in the project table files 
 -> SELECT * FROM customers;
 -> SELECT * FROM rentals;
 -> More edits were make to the project .sh file
@@ -614,6 +621,8 @@ BACK IN THE PSQL PROMPT:
         MAIN_MENU
 
 -> psql --username=freecodecamp --dbname=bikes <- Now we are back in the psql prompt 
+	-> We are creating outer joins between the different tables 
+	-> This is first done in the terminal, and then the final statement is added to the project .sh file 
 -> SELECT * FROM bikes;
 -> SELECT * FROM bikes LEFT JOIN rentals USING(bike_id);
 -> SELECT * FROM bikes INNER JOIN rentals USING(bike_id);
@@ -777,6 +786,8 @@ BACK IN THE PSQL PROMPT:
         MAIN_MENU
 
 -> psql --username=freecodecamp --dbname=bikes <- Back in the psql prompt 
+	-> This is part of a cycle of the uses of the prompt, we edit the project database with the psql prompt - and then edit the project .sh file again
+	-> In this use of the psql prompt, we are returning information in the project database and performing a table join  
 -> SELECT * FROM rentals INNER JOIN customers USING(customer_id);
 -> SELECT * FROM rentals INNER JOIN customers USING(customer_id) WHERE phone = '555-5555' AND bike_id = 1 AND date_returned IS NULL;
 -> SELECT rental_id FROM rentals INNER JOIN customers USING(customer_id) WHERE phone = '555-5555' AND bike_id = 1 AND date_returned IS NULL;
@@ -952,4 +963,54 @@ BACK IN THE PSQL PROMPT:
 -> psql --username=freecodecamp --dbname=bikes <- Back in the psql prompt 
 -> SELECT * FROM rentals;
 -> SELECT * FROM bikes ORDER BY bike_id;
+
+Setting up & connecting to the database
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 -> We are using the program to alter the database 
+-> The script is interacting with a psql database 
+-> The output is only consisting of rows and columns, separated by tabs
+-> We are connecting to the database
+
+Shell file functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-> MAIN_MENU <- This function displays the menu options 
+	-> This also handles user inputs for selecting options when the project .sh file is run 
+-> RENT_MENU <- This allows the user to input information pertaining to renting a bike 
+	-> Displaying the bikes left to rent 
+	-> Inputting customer information 
+	-> Updating the database with rental information 
+-> RETURN_MENU
+	-> This function allows a customer to return a bike 
+	-> This gets customer information, returns a list with the different bikes that they can return and updates the database with that return information 
+	-> This also provides an EXIT option, for the user to back out of the shell file 
+-> MAIN_MENU 
+ 	-> This function displays the main menu options and reads the user input 
+	-> Depending on what the user enters, we either run the EXIT, RETURN_MENY or RENT_MENU functions 
+	-> We re-run the function if the user enters an invalid statement 
+
+Error handling 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-> We have to error handle for different case scenarios 
+-> These include what happens if 
+	- There aren't any bikes left to rent 
+	- The user enters something which isn't a bike number 
+	- The user wants to return a bike which they don't have  
+
+Database queries 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-> We are using SQL queries to interact with the database 
+-> Information we are retrieving pertains to available bikes, customer details and rented bikes 
+-> This allows us to update information in the database based on the user's actions 
+
+Input validation  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-> We also have to check that what the user enters is in the correct syntax
+-> We need to check that the 'bike number' is actually an integer
+-> We also check the format of the phone number 
+-> So the user can enter information and it can be stored in the project database 
+-> This allows the user to rent and return bikes, with error handling 
